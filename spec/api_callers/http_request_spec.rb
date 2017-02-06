@@ -6,7 +6,7 @@ describe ::ApiCallers::HttpRequest do
   let(:http_verb) { 'get' }
 
   describe "#make_request" do
-    let(:http_obj) { double('http', request: request) }
+    let(:http_obj) { double('http', request: request, :use_ssl= => true) }
     let(:request) { double('request', body: { response: 'response'}) }
     let(:url) { double('url', request_uri: 'request_uri', host: 'host', port: 'port') }
 

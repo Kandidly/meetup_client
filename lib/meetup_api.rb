@@ -2,8 +2,8 @@ require 'api_callers/json_request'
 require 'api_callers/http_requester'
 
 class MeetupApi
-  DIRECT_BASE_URL = 'http://api.meetup.com'
-  METHOD_BASE_URL = 'http://api.meetup.com/2/'
+  DIRECT_BASE_URL = 'https://api.meetup.com'
+  METHOD_BASE_URL = 'https://api.meetup.com/2/'
 
   def direct_request(request_type, method_uri, params)
     request(DIRECT_BASE_URL + method_uri, params, request_type)
@@ -33,6 +33,6 @@ class MeetupApi
   end
 
   def query_string(params)
-    params.map { |k,v| "#{k}=#{v}" }.join("&")
+    params.map { |k,v| "#{CGI::escape(k.to_s)}=#{CGI::escape(v.to_s)}" }.join("&")
   end
 end

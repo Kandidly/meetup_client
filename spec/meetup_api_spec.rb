@@ -8,7 +8,7 @@ describe MeetupApi do
       params = { category: '1',
                  status: 'upcoming',
                  time: '0,1m' }
-      expect(subject.send(:query_string, params)).to eq 'category=1&status=upcoming&time=0,1m'
+      expect(subject.send(:query_string, params)).to eq 'category=1&status=upcoming&time=0%2C1m'
     end
   end
 
@@ -20,19 +20,19 @@ describe MeetupApi do
 
     describe "method request" do
       it "named request" do
-        expect(ApiCallers::JsonRequest).to receive(:new).with('http://api.meetup.com/2/events?category=1&key=abc', :get)
+        expect(ApiCallers::JsonRequest).to receive(:new).with('https://api.meetup.com/2/events?category=1&key=abc', :get)
         subject.events({ category: 1 })
       end
     end
 
     describe "direct request" do
       it "get request" do
-        expect(ApiCallers::JsonRequest).to receive(:new).with('http://api.meetup.com/events?category=1&key=abc', :get)
+        expect(ApiCallers::JsonRequest).to receive(:new).with('https://api.meetup.com/events?category=1&key=abc', :get)
         subject.get('/events', { category: 1 })
       end
 
       it "post request" do
-        expect(ApiCallers::JsonRequest).to receive(:new).with('http://api.meetup.com/events?category=1&key=abc', :post)
+        expect(ApiCallers::JsonRequest).to receive(:new).with('https://api.meetup.com/events?category=1&key=abc', :post)
         subject.post('/events', { category: 1 })
       end
     end
