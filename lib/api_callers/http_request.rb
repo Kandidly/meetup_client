@@ -10,6 +10,7 @@ module ApiCallers
     def make_request
       uri = URI.parse(@in_uri)
       http = Net::HTTP.new(uri.host, uri.port)
+      http.use_ssl = true
       response = http.request(class_to_call.new(uri.request_uri, headers))
       format_response(response.body)
     end
