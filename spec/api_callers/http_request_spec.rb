@@ -33,5 +33,28 @@ describe ::ApiCallers::HttpRequest do
         subject.make_request
       end
     end
+
+    context 'multipart request' do
+      subject { ::ApiCallers::HttpRequest.new('some_uri', http_verb, {'photo' => [filename, 'text/plain']}) }
+      let(:http_verb) { 'post' }
+      let(:tempfile) do
+        file = Tempfile.new(['test', 'txt'])
+        file.write('test text')
+        file.rewind
+        file
+      end
+      let(:filename) { tempfile.path }
+
+      after do
+        tempfile.unlink
+      end
+
+      it 'make multipart request to provided url' do
+        allow(Net::HTTP::Post::Multipart).to receive(:new).with('request_uri', hash_including('photo' => instance_of(UploadIO)), { 'Accept-Charset' => 'UTF-8' }).and_return(:post_request)
+        expect(Net::HTTP).to receive(:new)
+        expect(http_obj).to receive(:request).with(:post_request)
+        subject.make_request
+      end
+    end
   end
 end

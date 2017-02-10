@@ -15,5 +15,12 @@ describe ::ApiCallers::JsonRequest do
     it "formats the response from meetup" do
       expect(subject.format_response(response_body)).to eq expected_json
     end
+
+    context "malformed response" do
+      let(:response_body) { 'abc' }
+      it "returns empty" do
+        expect(subject.format_response(response_body)).to eq({})
+      end
+    end
   end
 end

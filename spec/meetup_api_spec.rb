@@ -20,20 +20,27 @@ describe MeetupApi do
 
     describe "method request" do
       it "named request" do
-        expect(ApiCallers::JsonRequest).to receive(:new).with('https://api.meetup.com/2/events?category=1&key=abc', :get)
+        expect(ApiCallers::JsonRequest).to receive(:new).with('https://api.meetup.com/2/events?category=1&key=abc', :get, nil, false)
         subject.events({ category: 1 })
       end
     end
 
     describe "direct request" do
       it "get request" do
-        expect(ApiCallers::JsonRequest).to receive(:new).with('https://api.meetup.com/events?category=1&key=abc', :get)
+        expect(ApiCallers::JsonRequest).to receive(:new).with('https://api.meetup.com/events?category=1&key=abc', :get, nil, false)
         subject.get('/events', { category: 1 })
       end
 
       it "post request" do
-        expect(ApiCallers::JsonRequest).to receive(:new).with('https://api.meetup.com/events?category=1&key=abc', :post)
+        expect(ApiCallers::JsonRequest).to receive(:new).with('https://api.meetup.com/events?category=1&key=abc', :post, nil, false)
         subject.post('/events', { category: 1 })
+      end
+    end
+
+    describe "multipart post request" do
+      it "request" do
+        expect(ApiCallers::JsonRequest).to receive(:new).with('https://api.meetup.com/events?category=1&key=abc', :post, {'file' => ['filename', 'format']}, false)
+        subject.multipart_post('/events', {'file' => ['filename', 'format']}, { category: 1 })
       end
     end
   end
