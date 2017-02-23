@@ -5,12 +5,20 @@ class MeetupApi
   DIRECT_BASE_URL = 'https://api.meetup.com'
   METHOD_BASE_URL = 'https://api.meetup.com/2/'
 
+  def initialize(include_code = false)
+    @include_code = include_code
+  end
+
   def direct_request(request_type, method_uri, params)
     request(DIRECT_BASE_URL + method_uri, params, request_type)
   end
 
   def method_request(method, params)
     request(METHOD_BASE_URL + method.to_s, params)
+  end
+
+  def multipart_post(method_uri, files, params)
+    request(DIRECT_BASE_URL + method_uri, params, :post, files)
   end
 
   def method_missing(method, *args, &block)
@@ -23,11 +31,11 @@ class MeetupApi
 
   private
 
-  def request(url_base, params, request_type = :get)
+  def request(url_base, params, request_type = :get, multipart_files = nil)
     params = params.merge( { key: ::MeetupClient.config.api_key } )
     url = "#{url_base}?#{query_string(params)}"
 
-    json_request = ApiCallers::JsonRequest.new(url, request_type)
+    json_request = ApiCallers::JsonRequest.new(url, request_type, multipart_files, @include_code)
     requester = ApiCallers::HttpRequester.new(json_request)
     requester.execute_request
   end
